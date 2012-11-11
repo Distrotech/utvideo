@@ -78,6 +78,7 @@ install: all
 	@cp -f $(UTV_CORE_DIR)/utvideo.h $(includedir)/utvideo/utvideo.h
 	@printf " INSTALL\t$(libdir)/libutvideo.a\n";
 	@cp -f $(UTV_CORE_DIR)/libutvideo.a $(libdir)/libutvideo.a
+	@cp -f $(UTV_CORE_DIR)/libutvideo.so $(libdir)/libutvideo.so
 
 uninstall:
 	@printf " RM\t$(includedir)/utvideo/*.h\n";
