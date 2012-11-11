@@ -8,7 +8,7 @@
 
 DESTDIR=
 
-prefix=/usr/local
+prefix=/usr
 libdir=$(DESTDIR)$(prefix)/lib
 includedir=$(DESTDIR)$(prefix)/include
 
@@ -19,7 +19,7 @@ RANLIB=$(CROSS_PREFIX)ranlib
 
 UTV_CORE_DIR=utv_core
 
-CXXFLAGS=-g -O2 -Wall -Wextra -Wno-multichar -Wno-unused-parameter -Wno-sign-compare
+CXXFLAGS=-g -O2 -Wall -Wextra -Wno-multichar -Wno-unused-parameter -Wno-sign-compare -fPIC
 
 # on MinGW env, uncomment following lines and set proper value to WINSDK_ROOT.
 #WINSDK_ROOT="/c/Program Files/Microsoft SDKs/Windows/v6.1"
@@ -34,7 +34,6 @@ endif
 OBJ = $(UTV_CORE_DIR)/Codec.o \
       $(UTV_CORE_DIR)/Convert.o \
       $(UTV_CORE_DIR)/DummyCodec.o \
-      $(UTV_CORE_DIR)/Format.o \
       $(UTV_CORE_DIR)/FrameBuffer.o \
       $(UTV_CORE_DIR)/GlobalConfig.o \
       $(UTV_CORE_DIR)/HuffmanCode.o \
@@ -52,11 +51,16 @@ OBJ = $(UTV_CORE_DIR)/Codec.o \
 	$(AR) rcu $@ $^
 	$(RANLIB) $@
 
-all: static-lib
+%.so:
+	$(CC) -shared -o $@ $^ -lrt -lpthread
+
+all: static-lib shared-lib
 
 $(UTV_CORE_DIR)/libutvideo.a: $(OBJ)
+$(UTV_CORE_DIR)/libutvideo.so: $(OBJ)
 
 static-lib: $(UTV_CORE_DIR)/libutvideo.a
+shared-lib: $(UTV_CORE_DIR)/libutvideo.so
 
 clean:
 	@printf " RM\t$(UTV_CORE_DIR)/*.o\n";
